@@ -28,10 +28,6 @@ public class Main {
    * it's not necessary to include those numbers in the primality checks at all.
    * The check against factors == 2 at the end is now useless as well. Instead, if we encounter only 1 factor - the number is composite, otherwise not.
    *
-   * <ol>
-   *   <li>The case when input is 0 or 1 should be handled accordingly</li>
-   * </ol>
-   *
    * Time Complexity O(n)
    * Space Complexity O(1)
    */
@@ -56,6 +52,9 @@ public class Main {
    *
    * All even numbers > 2 can also be eliminated. If an even number > 2 can divide the input without remainder, so can 2, which significantly reduces the
    * numbers in the primality check in case the input is odd.
+   *
+   * Time Complexity: O(square root N)
+   * Space Complexity: O(1)
    */
   public static boolean isPrimeV3(int input) {
     if (input < 2) {
@@ -77,22 +76,25 @@ public class Main {
 
   /**
    * Here is a ~3x faster algorithm compared to the one above. Considering the fact that all integers could be expressed as (6k + i) where i = -1,0,1,2,3,4
-   * and that 2 divides (6k + 0),(6k + 2),(6k + 4) and 3 divides (6k + 3).. All the numbers divisible by 2 and 3 without remainder are eliminated, and we only need to check
+   * and that 2 divides (6k + 0),(6k + 2),(6k + 4) and 3 divides (6k + 3).. All the numbers divisible by 2 or 3 without remainder are eliminated, and we only need to check
    * (6k - 1),(6k + 1) sequences up until square root of the input number (inclusive), as long as they are positive.
    *
    * The first number we need to check is 5 (6k - 1 => 6x1 - 1 => 5), followed by (6k + 1 => 6x1 + 1 => 7) and by doing the same operations for the next few numbers
    * we arrive at the following pattern: 5,7 -> 11,13 -> 17,19, etc...
    *
-   * Two rules can be inferred out of the pattern.
+   * Following the pattern, we need to take this into account:
    *
    * <ol>
    *   <li>A check for primality for the 1st index and the 2nd (which is always +2 bigger than the 1st one), if possible</li>
-   *   <li>After the 2 indexes from the previous point, the index is incremented with 6 to reach the next sequence of interest</li>
+   *   <li>After the 2 indexes from the previous point are checked and they are not prime, the index is incremented with 6 to reach the next sequence of interest</li>
    * </ol>
    *
    * All we need to do then is initialize the loop index at 5 and at each cycle get the current and the next number (which will be i + 2), check if the next number
    * does not exceed the sqrt and if any of them is a factor of the input - it's composite, otherwise we increment the i with 6 to jump to the next sequence we are interested in
    * and repeat the steps until a result is returned.
+   *
+   * Time Complexity: O(square root N)
+   * Space Complexity: O(1)
    */
   public static boolean isPrimeV4(int input) {
     if (input < 2) {
